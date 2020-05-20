@@ -14,6 +14,26 @@ Parameters:
       Type: String
       Default: 10.0.0.0/16
 
+  PublicSubnet1Cidr:
+      Description: Enter the IP range for this subnet.
+      Type: String
+      Default: 10.0.0.0/24
+
+  PublicSubnet2Cidr:
+      Description: Enter the IP range for this subnet.
+      Type: String
+      Default: 10.0.1.0/24
+      
+  PrivateSubnet1Cidr:
+      Description: Enter the IP range for this subnet.
+      Type: String
+      Default: 10.0.2.0/24
+
+  PrivateSubnet2Cidr:
+      Description: Enter the IP range for this subnet.
+      Type: String
+      Default: 10.0.3.0/24
+
 Resources:
 
   VPC:
@@ -35,4 +55,46 @@ Resources:
       Type: AWS::EC2::VPCGatewayAttachment
       Properties: 
         InternetGatewayId: !Ref InternetGateway
+        VpcId: !Ref VPC
+
+  PublicSubnet1:
+      Type: AWS::EC2::Subnet
+      Properties: 
+        AvailabilityZone: !Select [ 0, !GetAZs '']
+        CidrBlock: !Ref PublicSubnet1Cidr
+        MapPublicIpOnLaunch: True
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-Public Subnet 1"
+        VpcId: !Ref VPC
+
+  PublicSubnet2:
+      Type: AWS::EC2::Subnet
+      Properties: 
+        AvailabilityZone: !Select [ 1, !GetAZs '']
+        CidrBlock: !Ref PublicSubnet2Cidr
+        MapPublicIpOnLaunch: True
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-Public Subnet 2"
+        VpcId: !Ref VPC
+        
+  PrivateSubnet1:
+      Type: AWS::EC2::Subnet
+      Properties: 
+        AvailabilityZone: !Select [ 0, !GetAZs '']
+        CidrBlock: !Ref PrivateSubnet1Cidr
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-Private Subnet 1"
+        VpcId: !Ref VPC
+
+  PrivateSubnet2:
+      Type: AWS::EC2::Subnet
+      Properties: 
+        AvailabilityZone: !Select [ 1, !GetAZs '']
+        CidrBlock: !Ref PrivateSubnet2Cidr
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-Private Subnet 2"
         VpcId: !Ref VPC
