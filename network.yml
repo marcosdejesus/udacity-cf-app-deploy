@@ -116,3 +116,21 @@ Resources:
         Tags: 
           - Key: Name
             Value: !Sub "${EnvironmentName}-Elastic IP 2 Allocation"
+
+  NatGateway1:
+      Type: AWS::EC2::NatGateway
+      Properties: 
+        AllocationId: !GetAtt EIP1Allocation.AllocationId
+        SubnetId: !Ref PublicSubnet1
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-Nat Gateway at Public Subnet 1"
+
+  NatGateway2:
+      Type: AWS::EC2::NatGateway
+      Properties: 
+        AllocationId: !GetAtt EIP2Allocation.AllocationId
+        SubnetId: !Ref PublicSubnet2
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-Nat Gateway at Public Subnet 2"
