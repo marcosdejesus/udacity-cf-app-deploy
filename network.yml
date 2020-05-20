@@ -1,0 +1,7 @@
+Description: >
+  Udacity Cloud DevOps Nanodegree/2020 - Marcos Antonio de Jesus Filho
+  Deploy a High-Availability web app using CloudFormation
+
+Parameters:
+
+Resources:
