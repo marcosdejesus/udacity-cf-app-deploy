@@ -98,3 +98,21 @@ Resources:
           - Key: Name
             Value: !Sub "${EnvironmentName}-Private Subnet 2"
         VpcId: !Ref VPC
+
+  EIP1Allocation:
+      Type: AWS::EC2::EIP
+      DependsOn: IGAttachment
+      Properties: 
+        Domain: vpc
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-Elastic IP 1 Allocation"
+
+  EIP2Allocation:
+      Type: AWS::EC2::EIP
+      DependsOn: IGAttachment
+      Properties: 
+        Domain: vpc
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-Elastic IP 2 Allocation"
