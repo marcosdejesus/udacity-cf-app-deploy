@@ -9,4 +9,17 @@ Parameters:
       Description: Environment Name that will be prefixed on the resources name.
       Type: String
 
+  VPCCidr:
+      Description: Enter the value of the VPC CIDR Block
+      Type: String
+      Default: 10.0.0.0/16
+
 Resources:
+
+  VPC:
+      Type: AWS::EC2::VPC
+      Properties: 
+        CidrBlock: !Ref VPCCidr
+        Tags: 
+          - Key: Name
+            Value: !Ref EnvironmentName
