@@ -8,3 +8,63 @@ Parameters:
   EnvironmentName:
       Description: Environment name that will be prefixed to resources names and identifiers
       Type: String
+
+Resources:
+
+  LBSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties: 
+        GroupDescription: Security Group for the Load Balancer
+        GroupName: !Sub "${EnvironmentName}-LBSecurityGroup"
+        SecurityGroupIngress: 
+          - Description: HTTP Ingress Rule
+            FromPort: 80
+            IpProtocol: tcp
+            ToPort: 80
+          - Description: SSH Ingress Rule
+            FromPort: 22
+            IpProtocol: tcp
+            ToPort: 22
+        VpcId: 
+          Fn::ImportValue:
+            !Sub "${EnvironmentName}-VPCID"
+
+  ProfileWithRolesForOurApp:
+      Type: AWS::IAM::InstanceProfile
+      Properties: 
+        Roles:
+          - UdacityS3ReadOnlyEC2
+
+  BastionHost:
+      Type: AWS::EC2::Instance
+      Properties: 
+        BlockDeviceMappings: 
+          - DeviceName: /dev/sdk
+            Ebs:
+              VolumeSize: 10
+        IamInstanceProfile: !Ref ProfileWithRolesForOurApp
+        ImageId: ami-003634241a8fcdec0
+        InstanceInitiatedShutdownBehavior: stop
+        InstanceType: t2.micro
+        KeyName: jumpbox-us-west-2
+        NetworkInterfaces: 
+          - AssociatePublicIpAddress: true
+            DeviceIndex: 0
+            GroupSet: 
+              - !Ref LBSecurityGroup
+            SubnetId: 
+              Fn::ImportValue:
+                !Sub "${EnvironmentName}-PublicSubnet1ID"
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-BastionHost"
+        UserData: 
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            apt-get update -y
+            apt-get install unzip awscli -y
+            apt-get install apache2 -y
+            systemctl start apache2.service
+            cd /var/www/html
+            aws s3 cp s3://udacity-demo-1/udacity.zip .
+            unzip -o udacity.zip
