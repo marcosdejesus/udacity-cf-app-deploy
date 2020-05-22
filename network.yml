@@ -203,3 +203,47 @@ Resources:
       Properties: 
         RouteTableId: !Ref PrivateRouteTable2
         SubnetId: !Ref PrivateSubnet2
+
+Outputs:
+
+  VPCName:
+      Description: VPC Identifier
+      Value: !Ref VPC
+      Export:
+        Name: !Sub "${EnvironmentName}-VPCID"
+
+  PublicSubnet1Export:
+      Description: Public Subnet 1 ID
+      Value: !Ref PublicSubnet1
+      Export:
+        Name: !Sub "${EnvironmentName}-PublicSubnet1ID"
+
+  PublicSubnet2Export:
+      Description: Public Subnet 2 ID
+      Value: !Ref PublicSubnet2
+      Export:
+        Name: !Sub "${EnvironmentName}-PublicSubnet2ID"
+
+  PrivateSubnet1Export:
+      Description: Private Subnet 1 ID
+      Value: !Ref PrivateSubnet1
+      Export:
+        Name: !Sub "${EnvironmentName}-PrivateSubnet1ID"
+
+  PrivateSubnet2Export:
+      Description: Private Subnet 1 ID
+      Value: !Ref PrivateSubnet1
+      Export:
+        Name: !Sub "${EnvironmentName}-PrivateSubnet2ID"
+
+  PublicSubnets:
+      Description: List of the Public Subnets IDs
+      Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ] ]
+      Export:
+        Name: !Sub "${EnvironmentName}-PUBNETS"
+
+  PrivateSubnets:
+      Description: List of the Private Subnet IDs
+      Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ] ]
+      Export:
+        Name: !Sub "${EnvironmentName}-PRIVNETS"
