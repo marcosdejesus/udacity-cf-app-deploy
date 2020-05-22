@@ -1,0 +1,10 @@
+Description: >
+  Udacity Cloud DevOps Nanodegree/2020 - Marcos Antonio de Jesus Filho
+  Deploy a High-Availability web app using CloudFormation
+  Servers infrasctructure
+
+Parameters:
+
+  EnvironmentName:
+      Description: Environment name that will be prefixed to resources names and identifiers
+      Type: String
