@@ -161,3 +161,19 @@ Resources:
       Properties: 
         RouteTableId: !Ref PublicRouteTable
         SubnetId: !Ref PublicSubnet2
+
+  PrivateRouteTable1:
+      Type: AWS::EC2::RouteTable
+      Properties: 
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-PrivateRouteTable1"
+        VpcId: !Ref VPC
+
+  PrivateRouteTable2:
+      Type: AWS::EC2::RouteTable
+      Properties: 
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-PrivateRouteTable2"
+        VpcId: !Ref VPC
