@@ -134,3 +134,11 @@ Resources:
         Tags: 
           - Key: Name
             Value: !Sub "${EnvironmentName}-Nat Gateway at Public Subnet 2"
+
+  PublicRouteTable:
+      Type: AWS::EC2::RouteTable
+      Properties: 
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-PublicRouteTable"
+        VpcId: !Ref VPC
