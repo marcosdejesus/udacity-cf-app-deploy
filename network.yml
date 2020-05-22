@@ -149,3 +149,15 @@ Resources:
         DestinationCidrBlock: 0.0.0.0/0
         GatewayId: !Ref InternetGateway
         RouteTableId: !Ref PublicRouteTable
+
+  PublicSubnet1RTAssociation:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties: 
+        RouteTableId: !Ref PublicRouteTable
+        SubnetId: !Ref PublicSubnet1
+
+  PublicSubnet2RTAssociation:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties: 
+        RouteTableId: !Ref PublicRouteTable
+        SubnetId: !Ref PublicSubnet2
