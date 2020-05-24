@@ -155,3 +155,17 @@ Resources:
             - ','
             - Fn::ImportValue:
               !Sub "${EnvironmentName}-PRIVNETS"
+
+  LoadBalancer:
+      Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+      Properties: 
+        SecurityGroups: 
+          - !Ref LBSecurityGroup
+        Subnets: 
+          Fn::Split:
+            - ','
+            - Fn::ImportValue:
+              !Sub "${EnvironmentName}-PUBNETS"
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-LoadBalancer"
