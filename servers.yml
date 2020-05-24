@@ -114,6 +114,20 @@ Resources:
         Tags: 
           - Key: Name
             Value: !Sub "${EnvironmentName}-BastionHost"
+
+  ServersAutoScalingLaunchConf:
+      Type: AWS::AutoScaling::LaunchConfiguration
+      Properties: 
+        BlockDeviceMappings: 
+          - DeviceName: /dev/sda1
+            Ebs:
+              VolumeSize: 10
+        IamInstanceProfile: !Ref ProfileWithRolesForOurApp
+        ImageId: ami-003634241a8fcdec0
+        InstanceType: t2.micro
+        LaunchConfigurationName: !Sub "${EnvironmentName}-ServersLaunchConf"
+        SecurityGroups: 
+          - !Ref ServersSecurityGroup
         UserData: 
           Fn::Base64: !Sub |
             #!/bin/bash
