@@ -125,7 +125,6 @@ Resources:
         IamInstanceProfile: !Ref ProfileWithRolesForOurApp
         ImageId: ami-003634241a8fcdec0
         InstanceType: t2.micro
-        LaunchConfigurationName: !Sub "${EnvironmentName}-ServersLaunchConf"
         SecurityGroups: 
           - !Ref ServersSecurityGroup
         UserData: 
@@ -138,3 +137,21 @@ Resources:
             cd /var/www/html
             aws s3 cp s3://udacity-demo-1/udacity.zip .
             unzip -o udacity.zip
+
+  ServersAutoScalingGroup:
+      Type: AWS::AutoScaling::AutoScalingGroup
+      Properties: 
+        DesiredCapacity: 2
+        LaunchConfigurationName: !Ref ServersAutoScalingLaunchConf
+        MaxSize: 3
+        MinSize: 2
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-ServerInstances"
+        TargetGroupARNs: 
+          - String
+        VPCZoneIdentifier: 
+          Fn::Split:
+            - ','
+            - Fn::ImportValue:
+              !Sub "${EnvironmentName}-PRIVNETS"
