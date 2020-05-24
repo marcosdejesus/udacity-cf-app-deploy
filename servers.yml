@@ -16,12 +16,49 @@ Resources:
       Properties: 
         GroupDescription: Security Group for the Load Balancer
         GroupName: !Sub "${EnvironmentName}-LBSecurityGroup"
+        SecurityGroupEgress:
+          - Description: Rule for listener and health check
+            DestinationSecurityGroupId: !Ref ServersSecurityGroup
+            FromPort: 80
+            IpProtocol: tcp
+            ToPort: 80
         SecurityGroupIngress: 
           - CidrIp: 0.0.0.0/0
             Description: HTTP Ingress Rule
             FromPort: 80
             IpProtocol: tcp
             ToPort: 80
+        VpcId: 
+          Fn::ImportValue:
+            !Sub "${EnvironmentName}-VPCID"
+
+  ServersSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties: 
+        GroupDescription: Security Group for the Servers
+        GroupName: !Sub "${EnvironmentName}-ServersSecurityGroup"
+        SecurityGroupIngress: 
+          - SourceSecurityGroupId: !Ref LBSecurityGroup  
+            Description: HTTP Ingress Rule
+            FromPort: 80
+            IpProtocol: tcp
+            ToPort: 80
+        VpcId: 
+          Fn::ImportValue:
+            !Sub "${EnvironmentName}-VPCID"
+
+  BastionSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties: 
+        GroupDescription: Security Group for the Bastion Host
+        GroupName: !Sub "${EnvironmentName}-BastionSecurityGroup"
+        SecurityGroupEgress:
+          - DestinationSecurityGroupId: !Ref ServersSecurityGroup
+            Description: Allows SSH connection to our servers
+            FromPort: 22
+            IpProtocol: tcp
+            ToPort: 22
+        SecurityGroupIngress: 
           - CidrIp: 0.0.0.0/0
             Description: SSH Ingress Rule
             FromPort: 22
