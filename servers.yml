@@ -198,3 +198,10 @@ Resources:
         LoadBalancerArn: !Ref LoadBalancer
         Port: 80
         Protocol: HTTP
+
+Outputs:
+
+  LBDNS:
+      Description: DNS value for our Load Balancer 
+      Value: !Sub "http://${LoadBalancer.DNSName}"
+        
