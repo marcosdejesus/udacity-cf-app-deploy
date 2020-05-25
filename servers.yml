@@ -124,7 +124,7 @@ Resources:
               VolumeSize: 10
         IamInstanceProfile: !Ref ProfileWithRolesForOurApp
         ImageId: ami-003634241a8fcdec0
-        InstanceType: t2.micro
+        InstanceType: t3.small
         SecurityGroups: 
           - !Ref ServersSecurityGroup
         UserData: 
@@ -149,7 +149,7 @@ Resources:
           - Key: Name
             Value: !Sub "${EnvironmentName}-ServerInstances"
         TargetGroupARNs: 
-          - String
+          - !Ref TargetGroup
         VPCZoneIdentifier: 
           Fn::Split:
             - ','
@@ -188,3 +188,13 @@ Resources:
         VpcId: 
           Fn::ImportValue:
             !Sub "{EnvironmentName}-VPCID"
+
+  LBListener:
+      Type: AWS::ElasticLoadBalancingV2::Listener
+      Properties: 
+        DefaultActions: 
+          - TargetGroupArn: !Ref TargetGroup
+            Type: forward
+        LoadBalancerArn: !Ref LoadBalancer
+        Port: 80
+        Protocol: HTTP
