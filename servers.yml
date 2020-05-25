@@ -37,12 +37,6 @@ Resources:
       Properties: 
         GroupDescription: Security Group for the Servers
         GroupName: !Sub "${EnvironmentName}-ServersSecurityGroup"
-        SecurityGroupIngress: 
-          - SourceSecurityGroupId: !Ref LBSecurityGroup  
-            Description: HTTP Ingress Rule
-            FromPort: 80
-            IpProtocol: tcp
-            ToPort: 80
         VpcId: 
           Fn::ImportValue:
             !Sub "${EnvironmentName}-VPCID"
@@ -67,6 +61,16 @@ Resources:
         VpcId: 
           Fn::ImportValue:
             !Sub "${EnvironmentName}-VPCID"
+
+  ServersSecurityGroupIngressRule:
+      Type: AWS::EC2::SecurityGroupIngress
+      Properties: 
+        Description: HTTP Ingress Rule
+        FromPort: 80
+        GroupId: !Ref ServersSecurityGroup
+        IpProtocol: tcp
+        SourceSecurityGroupId: !Ref LBSecurityGroup
+        ToPort: 80
 
   S3ReadOnlyEC2:
       Type: AWS::IAM::Role
@@ -148,13 +152,14 @@ Resources:
         Tags: 
           - Key: Name
             Value: !Sub "${EnvironmentName}-ServerInstances"
+            PropagateAtLaunch: true
         TargetGroupARNs: 
           - !Ref TargetGroup
         VPCZoneIdentifier: 
           Fn::Split:
             - ','
             - Fn::ImportValue:
-              !Sub "${EnvironmentName}-PRIVNETS"
+                !Sub "${EnvironmentName}-PRIVNETS"
 
   LoadBalancer:
       Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -165,7 +170,7 @@ Resources:
           Fn::Split:
             - ','
             - Fn::ImportValue:
-              !Sub "${EnvironmentName}-PUBNETS"
+                !Sub "${EnvironmentName}-PUBNETS"
         Tags: 
           - Key: Name
             Value: !Sub "${EnvironmentName}-LoadBalancer"
@@ -187,7 +192,7 @@ Resources:
         UnhealthyThresholdCount: 5
         VpcId: 
           Fn::ImportValue:
-            !Sub "{EnvironmentName}-VPCID"
+            !Sub "${EnvironmentName}-VPCID"
 
   LBListener:
       Type: AWS::ElasticLoadBalancingV2::Listener
@@ -204,4 +209,3 @@ Outputs:
   LBDNS:
       Description: DNS value for our Load Balancer 
       Value: !Sub "http://${LoadBalancer.DNSName}"
-        
