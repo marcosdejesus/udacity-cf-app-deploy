@@ -169,3 +169,22 @@ Resources:
         Tags: 
           - Key: Name
             Value: !Sub "${EnvironmentName}-LoadBalancer"
+
+  TargetGroup:
+      Type: AWS::ElasticLoadBalancingV2::TargetGroup
+      Properties: 
+        HealthCheckIntervalSeconds: 10
+        HealthCheckPath: /
+        HealthCheckPort: 80
+        HealthCheckProtocol: HTTP
+        HealthCheckTimeoutSeconds: 8
+        HealthyThresholdCount: 2
+        Port: 80
+        Protocol: HTTP
+        Tags: 
+          - Key: Name
+            Value: !Sub "${EnvironmentName}-LBTargetGroup"
+        UnhealthyThresholdCount: 5
+        VpcId: 
+          Fn::ImportValue:
+            !Sub "{EnvironmentName}-VPCID"
