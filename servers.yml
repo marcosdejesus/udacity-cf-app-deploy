@@ -227,4 +227,6 @@ Outputs:
 
   LBDNS:
       Description: DNS value for our Load Balancer 
-      Value: !Sub "http://${LoadBalancer.DNSName}"
+      Value: !Sub 
+        - "http://${DNSEndpoint}"
+        - DNSEndpoint: !GetAtt LoadBalancer.DNSName
